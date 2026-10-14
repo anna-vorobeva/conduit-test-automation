@@ -1,0 +1,64 @@
+[project]
+name = "conduit-test-automation"
+version = "0.1.0"
+description = "API and UI test automation framework for the RealWorld Conduit app"
+authors = [{ name = "Anna Vorobeva" }]
+license = "MIT"
+requires-python = ">=3.12"
+dependencies = [
+    "pytest>=8.3",
+    "pytest-xdist>=3.6",
+    "pytest-playwright>=0.7",
+    "playwright>=1.50",
+    "httpx>=0.28",
+    "pydantic>=2.10",
+    "pydantic-settings>=2.7",
+    "allure-pytest>=2.13",
+    "faker>=30.0",
+    "psycopg[binary]>=3.2",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.9",
+    "pre-commit>=4.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--alluredir=allure-results",
+    "--screenshot=only-on-failure",
+    "--tracing=retain-on-failure",
+    "--output=test-results",
+]
+markers = [
+    "smoke: critical-path checks, run on every push",
+    "regression: full suite",
+    "api: API layer tests (added automatically by folder)",
+    "ui: UI layer tests (added automatically by folder)",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["framework", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "N",   # pep8-naming
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "SIM", # flake8-simplify
+    "PT",  # flake8-pytest-style
+    "RUF", # ruff-specific rules
+]
