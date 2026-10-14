@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Virtual environments and tool caches
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Local configuration (secrets, URLs) - keep .env.example committed
+.env
+
+# Test artifacts
+allure-results/
+allure-report/
+test-results/
+.auth/
+*.log
+
+# IDE and OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
