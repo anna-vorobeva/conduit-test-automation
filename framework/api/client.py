@@ -2,6 +2,7 @@ import httpx
 
 from framework.api.articles import ArticlesApi
 from framework.api.comments import CommentsApi
+from framework.api.profiles import ProfilesApi
 from framework.api.tags import TagsApi
 from framework.api.users import UsersApi
 
@@ -15,6 +16,7 @@ class ConduitApi:
         self.users = UsersApi(self._http)
         self.articles = ArticlesApi(self._http)
         self.comments = CommentsApi(self._http)
+        self.profiles = ProfilesApi(self._http)
         self.tags = TagsApi(self._http)
 
     def close(self) -> None:
