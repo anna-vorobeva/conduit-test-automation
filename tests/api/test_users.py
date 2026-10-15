@@ -1,22 +1,15 @@
-from uuid import uuid4
-
 import httpx
+
+from framework.factories import new_user
 
 
 def test_register_user(settings):
-    suffix = uuid4().hex[:8]
-    payload = {
-        "user": {
-            "username": f"user_{suffix}",
-            "email": f"user_{suffix}@example.com",
-            "password": "Secret-123",
-        }
-    }
+    user = new_user()
 
-    response = httpx.post(f"{settings.api_base_url}/users", json=payload)
+    response = httpx.post(f"{settings.api_base_url}/users", json={"user": user})
 
     assert response.status_code == 201, response.text
-    assert response.json()["user"]["email"] == payload["user"]["email"]
+    assert response.json()["user"]["email"] == user["email"]
 
 
 def test_login_returns_token(settings, registered_user):
