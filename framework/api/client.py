@@ -1,6 +1,7 @@
 import httpx
 
 from framework.api.articles import ArticlesApi
+from framework.api.comments import CommentsApi
 from framework.api.tags import TagsApi
 from framework.api.users import UsersApi
 
@@ -13,6 +14,7 @@ class ConduitApi:
         self._http = httpx.Client(base_url=base_url, headers=headers)
         self.users = UsersApi(self._http)
         self.articles = ArticlesApi(self._http)
+        self.comments = CommentsApi(self._http)
         self.tags = TagsApi(self._http)
 
     def close(self) -> None:

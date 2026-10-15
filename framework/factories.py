@@ -23,3 +23,7 @@ def new_article() -> dict:
         "body": fake.paragraph(nb_sentences=3),
         "tagList": fake.words(nb=2, unique=True),
     }
+
+
+def new_comment() -> dict:
+    return {"body": fake.sentence()}
