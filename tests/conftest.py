@@ -60,3 +60,9 @@ def article(user_api: ConduitApi) -> dict:
     response = user_api.articles.create(new_article())
     response.raise_for_status()
     return response.json()["article"]
+
+
+@pytest.fixture(scope="session")
+def base_url(settings: Settings) -> str:
+    """Tells pytest-playwright where the UI lives, so tests can call page.goto("/")."""
+    return settings.ui_base_url
