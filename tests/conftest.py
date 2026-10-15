@@ -2,12 +2,20 @@ import pytest
 
 from framework.api import ConduitApi
 from framework.config import Settings
+from framework.db import ConduitDb
 from framework.factories import new_article, new_user
 
 
 @pytest.fixture(scope="session")
 def settings() -> Settings:
     return Settings()
+
+
+@pytest.fixture(scope="session")
+def db(settings: Settings) -> ConduitDb:
+    database = ConduitDb(settings.database_dsn)
+    yield database
+    database.close()
 
 
 @pytest.fixture(scope="session")
@@ -18,13 +26,24 @@ def api(settings: Settings) -> ConduitApi:
     client.close()
 
 
-@pytest.fixture
-def registered_user(api: ConduitApi) -> dict:
+def register(api: ConduitApi) -> dict:
+    """Register a brand-new user and return their credentials together with the token."""
     user = new_user()
     response = api.users.register(user)
     response.raise_for_status()
     user["token"] = response.json()["user"]["token"]
     return user
+
+
+@pytest.fixture
+def registered_user(api: ConduitApi) -> dict:
+    return register(api)
+
+
+@pytest.fixture
+def another_user(api: ConduitApi) -> dict:
+    """A second user, for scenarios between two people (follow, someone else's article)."""
+    return register(api)
 
 
 @pytest.fixture

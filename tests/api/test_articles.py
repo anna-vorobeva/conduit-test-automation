@@ -31,3 +31,21 @@ def test_delete_article(user_api, api, article):
 
     assert response.status_code == 204, response.text
     assert api.articles.get(article["slug"]).status_code == 404
+
+
+def test_created_article_is_stored_in_db(user_api, db):
+    article = new_article()
+    slug = user_api.articles.create(article).json()["article"]["slug"]
+
+    row = db.find_article(slug)
+
+    assert row is not None
+    assert row["title"] == article["title"]
+    assert row["summary"] == article["description"]
+    assert row["content"] == article["body"]
+
+
+def test_deleted_article_is_removed_from_db(user_api, db, article):
+    user_api.articles.delete(article["slug"]).raise_for_status()
+
+    assert db.find_article(article["slug"]) is None

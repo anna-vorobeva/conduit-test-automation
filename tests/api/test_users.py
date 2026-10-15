@@ -22,3 +22,15 @@ def test_login_with_wrong_password_is_rejected(api, registered_user):
 
     assert response.status_code == 401, response.text
     assert response.json() == {"errors": {"credentials": ["invalid"]}}
+
+
+def test_registered_user_is_stored_with_hashed_password(api, db):
+    user = new_user()
+    api.users.register(user).raise_for_status()
+
+    row = db.find_user(user["email"])
+
+    assert row is not None
+    assert row["username"] == user["username"]
+    assert row["password"].startswith("pbkdf2_sha256$")
+    assert user["password"] not in row["password"]
