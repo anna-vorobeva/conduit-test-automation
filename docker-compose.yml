@@ -30,3 +30,16 @@ services:
       timeout: 5s
       start_period: 15s
       retries: 20
+
+  frontend:
+    build: docker/frontend
+    ports:
+      - "4100:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost/"]
+      interval: 3s
+      timeout: 5s
+      retries: 10
