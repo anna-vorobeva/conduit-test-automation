@@ -13,3 +13,13 @@ def new_user() -> dict:
         "email": f"{suffix}@example.com",
         "password": fake.password(length=12),
     }
+
+
+def new_article() -> dict:
+    """Payload for a new article. The title carries a unique suffix because slugs must be unique."""
+    return {
+        "title": f"{fake.sentence(nb_words=4).rstrip('.')} {uuid4().hex[:6]}",
+        "description": fake.sentence(),
+        "body": fake.paragraph(nb_sentences=3),
+        "tagList": fake.words(nb=2, unique=True),
+    }
