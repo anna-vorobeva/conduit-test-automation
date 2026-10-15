@@ -33,6 +33,7 @@ addopts = [
     "-ra",
     "--strict-markers",
     "--alluredir=allure-results",
+    "--clean-alluredir",
     "--screenshot=only-on-failure",
     "--tracing=retain-on-failure",
     "--output=test-results",
