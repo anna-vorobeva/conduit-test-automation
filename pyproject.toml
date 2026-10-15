@@ -39,8 +39,8 @@ addopts = [
     "--output=test-results",
 ]
 markers = [
-    "smoke: critical-path checks, run on every push",
-    "regression: full suite",
+    "smoke: critical path, a quick health check of the stand",
+    "regression: everything that is not smoke (added automatically)",
     "api: API layer tests (added automatically by folder)",
     "ui: UI layer tests (added automatically by folder)",
 ]

@@ -1,7 +1,10 @@
+import pytest
+
 from framework.factories import new_article
 from framework.models import Article
 
 
+@pytest.mark.smoke
 def test_create_article(user_api, registered_user):
     article = new_article()
 

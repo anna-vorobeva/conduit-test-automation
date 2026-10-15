@@ -1,7 +1,10 @@
+import pytest
+
 from framework.factories import new_user
 from framework.models import User
 
 
+@pytest.mark.smoke
 def test_register_user(api):
     user = new_user()
 
@@ -13,6 +16,7 @@ def test_register_user(api):
     assert registered.email == user["email"]
 
 
+@pytest.mark.smoke
 def test_login_returns_token(api, registered_user):
     response = api.users.login(registered_user["email"], registered_user["password"])
 

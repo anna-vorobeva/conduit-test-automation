@@ -6,6 +6,16 @@ from framework.db import ConduitDb
 from framework.factories import new_article, new_user
 
 
+def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
+    """Every test gets its layer marker (api/ui) from its folder; non-smoke tests are regression."""
+    for item in items:
+        layer = item.path.parent.name
+        if layer in ("api", "ui"):
+            item.add_marker(layer)
+        if "smoke" not in item.keywords:
+            item.add_marker("regression")
+
+
 @pytest.fixture(scope="session")
 def settings() -> Settings:
     return Settings()

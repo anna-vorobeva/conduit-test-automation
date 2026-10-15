@@ -1,7 +1,10 @@
+import pytest
+
 from framework.factories import new_comment
 from framework.models import Comment
 
 
+@pytest.mark.smoke
 def test_add_comment_to_article(user_api, article, registered_user):
     comment = new_comment()
 

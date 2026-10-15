@@ -1,5 +1,6 @@
 import re
 
+import pytest
 from playwright.sync_api import Page, expect
 
 from framework.factories import new_article
@@ -7,6 +8,7 @@ from framework.ui.article_page import ArticlePage
 from framework.ui.editor_page import EditorPage
 
 
+@pytest.mark.smoke
 def test_create_article_via_editor(user_page: Page):
     article = new_article()
     editor = EditorPage(user_page).open()

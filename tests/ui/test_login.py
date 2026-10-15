@@ -1,8 +1,10 @@
+import pytest
 from playwright.sync_api import Page, expect
 
 from framework.ui.login_page import LoginPage
 
 
+@pytest.mark.smoke
 def test_login_via_form_shows_username_in_navbar(page: Page, registered_user):
     login_page = LoginPage(page).open()
 
