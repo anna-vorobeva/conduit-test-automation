@@ -2,7 +2,7 @@ import pytest
 
 from framework.api import ConduitApi
 from framework.config import Settings
-from framework.factories import new_user
+from framework.factories import new_article, new_user
 
 
 @pytest.fixture(scope="session")
@@ -33,3 +33,11 @@ def user_api(settings: Settings, registered_user: dict) -> ConduitApi:
     client = ConduitApi(settings.api_base_url, token=registered_user["token"])
     yield client
     client.close()
+
+
+@pytest.fixture
+def article(user_api: ConduitApi) -> dict:
+    """An article freshly created by the registered user."""
+    response = user_api.articles.create(new_article())
+    response.raise_for_status()
+    return response.json()["article"]

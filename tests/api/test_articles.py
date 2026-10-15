@@ -17,3 +17,17 @@ def test_create_article_without_token_is_rejected(api):
     response = api.articles.create(new_article())
 
     assert response.status_code == 401, response.text
+
+
+def test_update_article_body(user_api, article):
+    response = user_api.articles.update(article["slug"], {"body": "Updated body"})
+
+    assert response.status_code == 200, response.text
+    assert response.json()["article"]["body"] == "Updated body"
+
+
+def test_delete_article(user_api, api, article):
+    response = user_api.articles.delete(article["slug"])
+
+    assert response.status_code == 204, response.text
+    assert api.articles.get(article["slug"]).status_code == 404
