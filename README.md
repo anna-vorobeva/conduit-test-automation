@@ -38,3 +38,35 @@ uv run pytest -m ui --headed       # watch the browser
 allure serve allure-results        # open the report locally (needs Allure CLI and Java)
 docker compose down                # stop the stand; the next `up` starts with an empty database
 ```
+
+## Framework layout
+
+```text
+framework/                  shared toolbox, no test logic inside
+├── config.py               Settings: reads .env (pydantic-settings); the only source of URLs and credentials
+├── factories.py            new_user(), new_article(), new_comment(): unique, realistic data (Faker + uuid)
+├── models.py               Pydantic models of API responses; strict, an unknown field fails the test
+├── db.py                   read-only PostgreSQL access to verify what the API actually persisted
+├── api/                    httpx client: ConduitApi with users, articles, comments, profiles, tags
+│   └── reporting.py        httpx hook: every request and response goes to Allure, secrets masked
+└── ui/                     Playwright page objects: LoginPage, RegisterPage, HomePage, EditorPage, ArticlePage
+    └── network.py          blocks third-party requests (icon CDN, Google fonts) in every browser context
+
+tests/
+├── conftest.py             fixtures: settings, api, user_api, registered_user, another_user, article, db
+├── api/                    one file per API resource
+└── ui/                     one file per page; conftest.py adds user_page, a browser signed in via API token
+
+docker/                     Dockerfiles of the stand: backend (Django Ninja), frontend (Angular + nginx)
+.github/workflows/ci.yml    lint → tests on the compose stand → Allure report to GitHub Pages
+```
+
+### How a test goes through the layers
+
+`test_create_article` asks for `user_api`, and pytest builds the chain: `settings` reads `.env`,
+`api` creates an anonymous client, `registered_user` takes `new_user()` and registers it through the API,
+`user_api` is a client that carries this user's token. The test then calls `user_api.articles.create(new_article())`,
+validates the response with `Article.model_validate(...)` and asserts on typed fields.
+
+UI tests follow the same idea: `user_page` puts the API token into the browser's localStorage,
+so the browser starts already signed in and the test exercises only the page under test.
