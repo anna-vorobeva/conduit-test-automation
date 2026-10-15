@@ -1,0 +1,22 @@
+{
+  "article": {
+    "description": "Expert force author.",
+    "body": "Updated body",
+    "createdAt": "2026-10-15T11:49:36.487Z",
+    "updatedAt": "2026-10-15T11:49:36.524Z",
+    "favorited": false,
+    "favoritesCount": 0,
+    "author": {
+      "following": false,
+      "bio": null,
+      "image": null,
+      "username": "michael_84fe2a34"
+    },
+    "tagList": [
+      "including",
+      "question"
+    ],
+    "slug": "model-ask-fill-674845",
+    "title": "Model ask fill 674845"
+  }
+}
