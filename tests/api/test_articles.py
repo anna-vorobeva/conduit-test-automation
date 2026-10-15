@@ -1,4 +1,5 @@
 from framework.factories import new_article
+from framework.models import Article
 
 
 def test_create_article(user_api, registered_user):
@@ -7,10 +8,11 @@ def test_create_article(user_api, registered_user):
     response = user_api.articles.create(article)
 
     assert response.status_code == 201, response.text
-    created = response.json()["article"]
-    assert created["title"] == article["title"]
-    assert sorted(created["tagList"]) == sorted(article["tagList"])
-    assert created["author"]["username"] == registered_user["username"]
+    created = Article.model_validate(response.json()["article"])
+    assert created.title == article["title"]
+    assert sorted(created.tag_list) == sorted(article["tagList"])
+    assert created.author.username == registered_user["username"]
+    assert created.favorites_count == 0
 
 
 def test_create_article_without_token_is_rejected(api):
@@ -23,7 +25,7 @@ def test_update_article_body(user_api, article):
     response = user_api.articles.update(article["slug"], {"body": "Updated body"})
 
     assert response.status_code == 200, response.text
-    assert response.json()["article"]["body"] == "Updated body"
+    assert Article.model_validate(response.json()["article"]).body == "Updated body"
 
 
 def test_delete_article(user_api, api, article):
